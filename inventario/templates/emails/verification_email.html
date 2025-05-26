@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifica tu cuenta - PlastGest</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .header {
+            background: linear-gradient(135deg, #0d6efd, #0056b3);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 300;
+        }
+        .logo {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .welcome-message {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .code-section {
+            background-color: #f8f9fa;
+            border: 2px dashed #0d6efd;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .verification-code {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0d6efd;
+            letter-spacing: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .code-label {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #0d6efd;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        .info-section {
+            background-color: #e3f2fd;
+            border-left: 4px solid #0d6efd;
+            padding: 20px;
+            margin: 25px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            border-top: 1px solid #e9ecef;
+        }
+        .security-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        .social-links {
+            margin-top: 20px;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #0d6efd;
+            text-decoration: none;
+        }
+        @media (max-width: 600px) {
+            .container {
+                margin: 10px;
+                border-radius: 0;
+            }
+            .content {
+                padding: 20px;
+            }
+            .header {
+                padding: 20px;
+            }
+            .verification-code {
+                font-size: 24px;
+                letter-spacing: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">♻️ PlastGest</div>
+            <h1>¡Bienvenido a bordo!</h1>
+            <p>Tienda Virtual de Productos Plásticos</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <div class="welcome-message">
+                <strong>Hola {{ user.first_name|default:user.username }},</strong>
+            </div>
+            
+            <p>¡Gracias por registrarte en <strong>PlastGest</strong>! Estamos emocionados de tenerte como parte de nuestra comunidad de productos plásticos de calidad.</p>
+            
+            <p>Para completar tu registro y comenzar a explorar nuestro catálogo, necesitamos verificar tu dirección de correo electrónico.</p>
+
+            <!-- Código de Verificación -->
+            <div class="code-section">
+                <div class="code-label">Tu código de verificación es:</div>
+                <div class="verification-code">{{ verification_code }}</div>
+                <p style="color: #666; margin: 10px 0 0 0; font-size: 14px;">Este código expira en {{ expires_hours }} horas</p>
+            </div>
+
+            <!-- Botón de Verificación -->
+            <div style="text-align: center;">
+                <a href="{{ verification_url }}" class="button">
+                    ✅ Verificar mi cuenta
+                </a>
+            </div>
+
+            <!-- Información adicional -->
+            <div class="info-section">
+                <h3 style="margin-top: 0; color: #0d6efd;">¿Qué puedes hacer en PlastGest?</h3>
+                <ul style="margin: 0; padding-left: 20px;">
+                    <li>🛒 Explorar nuestro amplio catálogo de productos plásticos</li>
+                    <li>📦 Realizar pedidos de envases, tuberías, utensilios y más</li>
+                    <li>📊 Gestionar tu inventario (si eres vendedor/distribuidor)</li>
+                    <li>🚚 Seguimiento de tus pedidos en tiempo real</li>
+                    <li>💡 Recibir ofertas especiales y novedades</li>
+                </ul>
+            </div>
+
+            <!-- Nota de Seguridad -->
+            <div class="security-note">
+                <strong>🔒 Nota de Seguridad:</strong> Este email contiene información confidencial. Si no te registraste en PlastGest, puedes ignorar este mensaje de forma segura. El enlace expirará automáticamente.
+            </div>
+
+            <p>Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos. ¡Estamos aquí para ayudarte!</p>
+
+            <p style="margin-top: 30px;">
+                Saludos cordiales,<br>
+                <strong>El equipo de PlastGest</strong><br>
+                <span style="color: #666;">Especialistas en Productos Plásticos</span>
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>PlastGest - Tienda Virtual de Productos Plásticos</strong></p>
+            <p>Este es un email automático, por favor no responder directamente.</p>
+            <p>© 2025 PlastGest. Todos los derechos reservados.</p>
+            
+            <div class="social-links">
+                <a href="{{ site_url }}">🌐 Visitar PlastGest</a>
+                <a href="{{ site_url }}/contacto/">📧 Contacto</a>
+                <a href="{{ site_url }}/ayuda/">❓ Ayuda</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

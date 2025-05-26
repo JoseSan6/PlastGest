@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import RegistroForm
 from django.contrib.auth import login as auth_login
+from .models import Producto
 
 def login_view(request):
     if request.method == 'POST':
@@ -23,8 +24,8 @@ def logout_view(request):
     return redirect('login')
 @login_required
 def lista_productos(request):
-    # Aquí puedes agregar lógica para obtener productos de la base de datos
-    return render(request, 'inventario/lista_productos.html')
+    productos = Producto.objects.all()
+    return render(request, 'inventario/lista_productos.html', {'productos': productos})
 def registro_view(request):
     if request.method == 'POST':
         form = RegistroForm(request.POST)
