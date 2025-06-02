@@ -1,0 +1,71 @@
+=====================================
+♻️ PLASTGEST - ¡CUENTA VERIFICADA!
+=====================================
+
+¡Hola {{ user.first_name|default:user.username }}!
+
+🎉 ¡FELICITACIONES! Tu cuenta en PlastGest ha sido verificada exitosamente. 
+
+Ya puedes acceder a todas las funcionalidades de nuestra tienda virtual de productos plásticos.
+
+=====================================
+✅ TU CUENTA ESTÁ LISTA
+=====================================
+
+Tu cuenta está 100% activa y lista para usar. Explora nuestro catálogo de productos plásticos de alta calidad.
+
+🔐 Iniciar Sesión: {{ login_url }}
+🛒 Ver Productos: {{ products_url }}
+
+=====================================
+¿QUÉ PUEDES HACER AHORA?
+=====================================
+
+🛒 CATÁLOGO COMPLETO
+Explora nuestra amplia gama de envases, tuberías, utensilios y productos plásticos especializados.
+
+📦 GESTIÓN DE PEDIDOS
+Realiza pedidos fácilmente y hace seguimiento en tiempo real desde tu panel personal.
+
+💡 OFERTAS ESPECIALES
+Accede a descuentos exclusivos, promociones y ofertas especiales para clientes registrados.
+
+🚚 SEGUIMIENTO DE ENVÍOS
+Monitorea tus pedidos desde el momento que salen de nuestro almacén hasta tu puerta.
+
+=====================================
+📋 INFORMACIÓN DE TU CUENTA
+=====================================
+
+Usuario: {{ user.username }}
+Email: {{ user.email }} ✅
+Estado: Cuenta verificada y activa
+Tipo: {{ user.profile.get_role_display|default:"Cliente" }}
+
+=====================================
+🎯 PRODUCTOS POPULARES
+=====================================
+
+Te recomendamos comenzar explorando:
+
+🍾 Envases: {{ products_url }}?categoria=envases
+🔧 Tuberías: {{ products_url }}?categoria=tuberias
+🥄 Utensilios: {{ products_url }}?categoria=utensilios
+
+=====================================
+
+Si tienes alguna pregunta o necesitas ayuda para comenzar, nuestro equipo de soporte está disponible para asistirte.
+
+¡Gracias por elegir PlastGest y bienvenido a nuestra comunidad!
+
+El equipo de PlastGest
+Especialistas en Productos Plásticos
+
+=====================================
+PlastGest - Tienda Virtual de Productos Plásticos
+© 2025 PlastGest. Todos los derechos reservados.
+
+🌐 Tienda: {{ site_url }}
+👤 Mi Perfil: {{ site_url }}/perfil/
+📧 Contacto: {{ site_url }}/contacto/
+=====================================

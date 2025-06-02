@@ -1,3 +1,8 @@
+# ===================================
+# CONFIGURACIÓN DE LA APP INVENTARIO
+# PlastGest - Sistema de Inventario
+# ===================================
+
 from django.apps import AppConfig
 
 
@@ -7,5 +12,9 @@ class InventarioConfig(AppConfig):
     verbose_name = 'Sistema de Inventario PlastGest'
     
     def ready(self):
-        # Importar signals para que se registren automáticamente
-        import inventario.signals
+        """Se ejecuta cuando la app está lista"""
+        try:
+            # Importar signals para que se registren automáticamente
+            import inventario.signals
+        except ImportError:
+            pass
