@@ -1,0 +1,46 @@
+# ===================================
+# PLASTGEST - TIENDA VIRTUAL DE PRODUCTOS PLÁSTICOS
+# Sistema de Gestión Completo con Autenticación Avanzada
+# ===================================
+
+# Django Framework Core
+Django==5.2
+djangorestframework==3.16.0
+djangorestframework-simplejwt==5.5.0
+
+# Django Extensions para Auth Avanzada
+django-cors-headers==4.7.0
+django-filter==25.1
+django-environ==0.11.2
+django-otp==1.2.1
+
+# Sistema de Roles y Permisos
+django-guardian==2.4.0
+
+# UI/UX Mejorada
+django-crispy-forms==2.1
+crispy-bootstrap5==0.7
+django-widget-tweaks==1.5.0
+
+# Sistema de Mensajes y Notificaciones
+django-messages-extends==0.6.2
+
+# Image Processing y Media
+Pillow==11.1.0
+
+# Database Support
+sqlparse==0.5.3
+
+# Time Zone Support
+tzdata==2025.1
+asgiref==3.8.1
+
+# Email y Comunicación
+# Para Gmail/email real necesitarás configurar OAuth2 o App Password
+
+# ===================================
+# PRODUCTION DEPENDENCIES
+# ===================================
+# gunicorn==21.2.0
+# whitenoise==6.6.0
+# django-storages==1.14.2  # Para AWS S3 si necesitas

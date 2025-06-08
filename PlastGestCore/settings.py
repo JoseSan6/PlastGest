@@ -11,21 +11,31 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+# Initialize environment variables
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Take environment variables from .env file
+environ.Env.read_env(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-e#_0im25q1^gsj=w8)^c*d5^aowr#antj9&!k4n3029d_klmb0'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 
 # Application definition
@@ -37,6 +47,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
+    # Third Party Apps
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
+    'django_filters',
+    'guardian',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'widget_tweaks',
+    'django_otp',
+    
+    # Local Apps
     'inventario',
 ]
 
@@ -48,6 +71,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # PlastGest Custom Middleware
+    'inventario.middleware.auth_middleware.RolePermissionMiddleware',
+    'inventario.middleware.auth_middleware.SessionSecurityMiddleware',
+    'inventario.middleware.auth_middleware.MessageEnhancementMiddleware',
 ]
 
 ROOT_URLCONF = 'PlastGestCore.urls'
@@ -116,7 +143,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# Media files (User uploads)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -126,6 +161,82 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/productos/'  # Página a la que redirige después del login
 LOGOUT_REDIRECT_URL = '/login/'     # Página a la que redirige después del logout
-# settings.py
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# ===================================
+# EMAIL CONFIGURATION - REAL EMAIL
+# ===================================
+
+# Email Backend Configuration
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+
+# Email Settings
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default='PlastGest <noreply@plastgest.com>')
+EMAIL_SUBJECT_PREFIX = env('EMAIL_SUBJECT_PREFIX', default='[PlastGest] ')
+
+# Server Email (for error reporting)
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+ADMINS = [('Administrador PlastGest', EMAIL_HOST_USER)]
+MANAGERS = ADMINS
+
+# ===================================
+# CRISPY FORMS CONFIGURATION
+# ===================================
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+# ===================================
+# DJANGO GUARDIAN CONFIGURATION
+# ===================================
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
+
+# ===================================
+# REST FRAMEWORK CONFIGURATION
+# ===================================
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# ===================================
+# JWT CONFIGURATION
+# ===================================
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
+# ===================================
+# DJANGO OTP CONFIGURATION
+# ===================================
+OTP_TOTP_ISSUER = 'PlastGest'
+OTP_EMAIL_SUBJECT = 'Tu código de verificación PlastGest'
+
+# ===================================
+# MESSAGES FRAMEWORK
+# ===================================
+from django.contrib.messages import constants as messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
 

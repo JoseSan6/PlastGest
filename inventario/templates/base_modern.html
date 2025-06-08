@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PlastGest - Tienda Virtual de Productos Plásticos{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Tailwind CSS para componentes especiales -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --plastgest-primary: #0d6efd;
+            --plastgest-secondary: #6c757d;
+            --plastgest-success: #198754;
+            --plastgest-danger: #dc3545;
+            --plastgest-warning: #ffc107;
+            --plastgest-info: #0dcaf0;
+        }
+        
+        .navbar-plastgest {
+            background: linear-gradient(135deg, var(--plastgest-primary), #0056b3);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+        
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            padding: 0.75rem 1rem !important;
+            border-radius: 8px;
+            margin: 0 0.25rem;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        .navbar-nav .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+            border-radius: 12px;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.75rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            transform: translateX(4px);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #28a745, #20c997);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background-color: var(--plastgest-danger);
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+        
+        .breadcrumb-item a {
+            text-decoration: none;
+            color: var(--plastgest-primary);
+        }
+        
+        .breadcrumb-item a:hover {
+            color: #0056b3;
+        }
+        
+        .alert-modern {
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .alert-modern .alert-icon {
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+        }
+        
+        .btn-logout {
+            background: linear-gradient(135deg, var(--plastgest-danger), #c82333);
+            border: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-logout:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        }
+        
+        .role-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+        
+        .main-content {
+            min-height: calc(100vh - 140px);
+            padding-top: 2rem;
+        }
+        
+        .footer-plastgest {
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        /* Loading states */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+        }
+        
+        .btn-loading::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid transparent;
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 1s ease infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .navbar-nav {
+                padding-top: 1rem;
+            }
+            
+            .main-content {
+                padding-top: 1rem;
+            }
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-plastgest">
+        <div class="container">
+            <!-- Brand -->
+            <a class="navbar-brand" href="{% url 'lista_productos' %}">
+                <i class="bi bi-recycle me-2"></i>
+                PlastGest
+            </a>
+            
+            <!-- Mobile toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <!-- Navigation items -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                {% if user.is_authenticated %}
+                    <!-- Left side navigation -->
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.resolver_match.url_name == 'lista_productos' %}active{% endif %}" 
+                               href="{% url 'lista_productos' %}">
+                                <i class="bi bi-box-seam me-1"></i>
+                                Productos
+                            </a>
+                        </li>
+                        
+                        {% if user.profile.role.name == 'admin' or user.profile.role.name == 'gerente' or user.profile.role.name == 'almacenero' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showComingSoon('Gestión de Inventario')">
+                                <i class="bi bi-boxes me-1"></i>
+                                Inventario
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% if user.profile.role.name == 'admin' or user.profile.role.name == 'gerente' or user.profile.role.name == 'vendedor' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showComingSoon('Gestión de Pedidos')">
+                                <i class="bi bi-cart-check me-1"></i>
+                                Pedidos
+                            </a>
+                        </li>
+                        {% endif %}
+                        
+                        {% if user.profile.role.name == 'admin' or user.profile.role.name == 'gerente' %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="showComingSoon('Reportes y Análisis')">
+                                <i class="bi bi-graph-up me-1"></i>
+                                Reportes
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                    
+                    <!-- Right side - User menu -->
+                    <ul class="navbar-nav">
+                        <!-- Notifications -->
+                        <li class="nav-item dropdown me-2">
+                            <a class="nav-link position-relative" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-bell"></i>
+                                <span class="notification-badge">3</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><h6 class="dropdown-header">Notificaciones</h6></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="bi bi-info-circle text-info me-2"></i>
+                                    Stock bajo en algunos productos
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="bi bi-cart-plus text-success me-2"></i>
+                                    Nuevo pedido recibido
+                                </a></li>
+                                <li><a class="dropdown-item" href="#">
+                                    <i class="bi bi-person-plus text-primary me-2"></i>
+                                    Nuevo usuario registrado
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-center" href="#">Ver todas las notificaciones</a></li>
+                            </ul>
+                        </li>
+                        
+                        <!-- User dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                <div class="user-avatar me-2">
+                                    {{ user.first_name|first|default:user.username|first|upper }}
+                                </div>
+                                <div class="d-none d-md-block">
+                                    <div class="fw-semibold">{{ user.first_name|default:user.username }}</div>
+                                    <div class="small text-light opacity-75">{{ user.profile.get_role_display|default:"Usuario" }}</div>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li class="px-3 py-2">
+                                    <div class="fw-semibold">{{ user.get_full_name|default:user.username }}</div>
+                                    <div class="small text-muted">{{ user.email }}</div>
+                                    {% if user.profile.role %}
+                                    <span class="role-badge bg-primary text-white">
+                                        {{ user.profile.get_role_display }}
+                                    </span>
+                                    {% endif %}
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="#" onclick="showComingSoon('Mi Perfil')">
+                                    <i class="bi bi-person me-2"></i>Mi Perfil
+                                </a></li>
+                                <li><a class="dropdown-item" href="#" onclick="showComingSoon('Configuración')">
+                                    <i class="bi bi-gear me-2"></i>Configuración
+                                </a></li>
+                                {% if user.profile.role.name == 'admin' %}
+                                <li><a class="dropdown-item" href="{% url 'admin:index' %}" target="_blank">
+                                    <i class="bi bi-shield-lock me-2"></i>Panel Admin
+                                </a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'logout' %}" class="d-inline w-100">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item text-danger" onclick="return confirmLogout()">
+                                            <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                {% else %}
+                    <!-- Not authenticated -->
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">
+                                <i class="bi bi-box-arrow-in-right me-1"></i>
+                                Iniciar Sesión
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'registro' %}">
+                                <i class="bi bi-person-plus me-1"></i>
+                                Registrarse
+                            </a>
+                        </li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Breadcrumb (opcional) -->
+    {% block breadcrumb %}{% endblock %}
+    
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mt-3">
+        {% for message in messages %}
+        <div class="alert alert-modern alert-{{ message.tags|default:'info' }} alert-dismissible fade show" role="alert">
+            <i class="bi bi-{% if message.tags == 'error' or message.tags == 'danger' %}exclamation-triangle{% elif message.tags == 'success' %}check-circle{% elif message.tags == 'warning' %}exclamation-circle{% else %}info-circle{% endif %} alert-icon"></i>
+            <strong>
+                {% if message.tags == 'error' or message.tags == 'danger' %}¡Error!
+                {% elif message.tags == 'success' %}¡Éxito!
+                {% elif message.tags == 'warning' %}¡Atención!
+                {% else %}Información{% endif %}
+            </strong>
+            {{ message|safe }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}
+        <div class="container">
+            <h1>Bienvenido a PlastGest</h1>
+            <p>Sistema de gestión para tienda virtual de productos plásticos.</p>
+        </div>
+        {% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="footer-plastgest">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="bi bi-recycle me-2"></i>PlastGest</h5>
+                    <p class="text-muted">
+                        Tienda virtual especializada en productos plásticos de alta calidad.
+                        Envases, tuberías, utensilios y más.
+                    </p>
+                </div>
+                <div class="col-md-3">
+                    <h6>Enlaces</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'lista_productos' %}" class="text-muted">Productos</a></li>
+                        <li><a href="#" class="text-muted">Sobre Nosotros</a></li>
+                        <li><a href="#" class="text-muted">Contacto</a></li>
+                        <li><a href="#" class="text-muted">Términos</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6>Soporte</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted">Centro de Ayuda</a></li>
+                        <li><a href="#" class="text-muted">FAQ</a></li>
+                        <li><a href="#" class="text-muted">Devoluciones</a></li>
+                        <li><a href="#" class="text-muted">Garantías</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="text-muted mb-0">&copy; 2025 PlastGest. Todos los derechos reservados.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <small class="text-muted">
+                        Versión 2.0 | 
+                        {% if user.is_authenticated %}
+                            Conectado como: {{ user.username }}
+                        {% else %}
+                            <a href="{% url 'login' %}">Iniciar Sesión</a>
+                        {% endif %}
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Confirmación de logout
+        function confirmLogout() {
+            return confirm('¿Estás seguro de que quieres cerrar sesión?');
+        }
+        
+        // Mostrar mensaje "próximamente"
+        function showComingSoon(feature) {
+            alert(`${feature} estará disponible próximamente. ¡Gracias por tu paciencia!`);
+        }
+        
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    if (alert && alert.classList.contains('show')) {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }
+                }, 5000);
+            });
+        });
+        
+        // Loading state for buttons
+        function setButtonLoading(button, loading = true) {
+            if (loading) {
+                button.classList.add('btn-loading');
+                button.disabled = true;
+            } else {
+                button.classList.remove('btn-loading');
+                button.disabled = false;
+            }
+        }
+        
+        // Toast notifications (función helper)
+        function showToast(message, type = 'info') {
+            const toastHtml = `
+                <div class="toast align-items-center text-white bg-${type} border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body">
+                            ${message}
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            `;
+            
+            // Crear contenedor si no existe
+            let toastContainer = document.querySelector('.toast-container');
+            if (!toastContainer) {
+                toastContainer = document.createElement('div');
+                toastContainer.className = 'toast-container position-fixed bottom-0 end-0 p-3';
+                document.body.appendChild(toastContainer);
+            }
+            
+            // Agregar toast
+            toastContainer.insertAdjacentHTML('beforeend', toastHtml);
+            const toastElement = toastContainer.lastElementChild;
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+            
+            // Limpiar después de que se oculte
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                toastElement.remove();
+            });
+        }
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

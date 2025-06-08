@@ -1,0 +1,59 @@
+=====================================
+♻️ PLASTGEST - VERIFICA TU CUENTA
+=====================================
+
+¡Hola {{ user.first_name|default:user.username }}!
+
+¡Gracias por registrarte en PlastGest! Estamos emocionados de tenerte como parte de nuestra comunidad de productos plásticos de calidad.
+
+Para completar tu registro y comenzar a explorar nuestro catálogo, necesitamos verificar tu dirección de correo electrónico.
+
+=====================================
+CÓDIGO DE VERIFICACIÓN
+=====================================
+
+Tu código de verificación es: {{ verification_code }}
+
+Este código expira en {{ expires_hours }} horas.
+
+=====================================
+ENLACE DE VERIFICACIÓN
+=====================================
+
+También puedes hacer clic en este enlace para verificar tu cuenta:
+{{ verification_url }}
+
+=====================================
+¿QUÉ PUEDES HACER EN PLASTGEST?
+=====================================
+
+🛒 Explorar nuestro amplio catálogo de productos plásticos
+📦 Realizar pedidos de envases, tuberías, utensilios y más
+📊 Gestionar tu inventario (si eres vendedor/distribuidor)
+🚚 Seguimiento de tus pedidos en tiempo real
+💡 Recibir ofertas especiales y novedades
+
+=====================================
+NOTA DE SEGURIDAD
+=====================================
+
+🔒 Este email contiene información confidencial. Si no te registraste en PlastGest, puedes ignorar este mensaje de forma segura. El enlace expirará automáticamente.
+
+=====================================
+
+Si tienes alguna pregunta o necesitas ayuda, no dudes en contactarnos. ¡Estamos aquí para ayudarte!
+
+Saludos cordiales,
+El equipo de PlastGest
+Especialistas en Productos Plásticos
+
+=====================================
+PlastGest - Tienda Virtual de Productos Plásticos
+© 2025 PlastGest. Todos los derechos reservados.
+
+🌐 Visitar PlastGest: {{ site_url }}
+📧 Contacto: {{ site_url }}/contacto/
+❓ Ayuda: {{ site_url }}/ayuda/
+
+Este es un email automático, por favor no responder directamente.
+=====================================
